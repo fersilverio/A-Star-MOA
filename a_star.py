@@ -86,7 +86,6 @@ def geraSucessores(tabuleiro,aux):
     return sucessores
 
 
-
 def verifica_tabuleiros_iguais(tab_m,conj):
     for k in conj:
         if tab_m == k.tabuleiro:
@@ -94,6 +93,69 @@ def verifica_tabuleiros_iguais(tab_m,conj):
     return False
 
 
+
+#Implementação das Heurísticas:
+
+def h1(tabuleiro):
+    #tabuleiro = no.tabuleiro
+    peca_fora_lugar = 0
+    peca_atual = 0
+    for i in range(len(tabuleiro)):
+        for j in range(len(tabuleiro)):
+            if tabuleiro[i][j] == peca_atual:
+                peca_atual += 1
+            else:
+                peca_fora_lugar += 1
+                peca_atual += 1 
+    return peca_fora_lugar
+
+
+def h2(no):
+    tabuleiro = no.tabuleiro
+    seq_fora_lugar = 0
+    aux = list()
+    for i in range(len(tabuleiro)):
+        for j in range(len(tabuleiro)):
+            aux.append(tabuleiro[i][j])
+    for i in range(0,(len(aux) - 1)):
+        if aux[i + 1] != aux[i] + 1:
+            if aux[i] == 0:
+                continue
+            else:
+                seq_fora_lugar += 1    
+    return seq_fora_lugar
+
+
+
+# 5 1 2 3 9 6 7 4 13 10 11 8 0 14 15 12 ----> manhattan = 12
+
+def h3(no):
+    tabuleiro = no.tabuleiro
+    m_aux = [[1,2,3,4], [5,6,7,8], [9,10,11,12], [13,14,15,0]]
+    manhattan = 0
+    for i in range(len(tabuleiro)):
+        for j in range(len(tabuleiro)):
+            if tabuleiro[i][j] != m_aux[i][j]:
+                x1,y1 = i,j
+                x2,y2 = pos(m_aux[i][j],tabuleiro)
+                manhattan += abs(x1 - x2) + abs(y1 - y2)
+    return manhattan
+
+
+
+def h4(no,p1,p2,p3):
+    return (p1 * h1(no)) + (p2 * h2(no)) + (p3 * h3(no))
+
+
+def h5(no):
+    return max(h1(no),h2(no),h3(no))
+
+
+
+
+
+
+#Implementação do A*
 def a_star(inicial,final):
     conj_a = list()
     conj_f = list()
