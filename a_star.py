@@ -27,7 +27,6 @@ def pos(elem,aux):
                 return i,j
 
 def pos_sucessoras(tabuleiro):
-    #tabuleiro = no.tabuleiro
     i,j = pos(0,tabuleiro)
     aux = list()
     if i == 0:
