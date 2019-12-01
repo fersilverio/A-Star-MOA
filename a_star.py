@@ -20,7 +20,6 @@ def f_menor_valor(conj):
             menor = conj[i]
     return menor
 
-
 def pos(elem,aux):
     for i in range(len(aux)):
         for j in range(len(aux)):
@@ -69,8 +68,8 @@ def pos_sucessoras(tabuleiro):
             aux.append(tabuleiro[i][j - 1])
     return aux
 
-def geraSucessores(tabuleiro,aux):
-    #tabuleiro = no.tabuleiro
+def geraSucessores(v,aux):
+    tabuleiro = v.tabuleiro
     i,j = pos(0,tabuleiro)
     sucessores = list()
     for k in range(len(aux)):
@@ -82,6 +81,10 @@ def geraSucessores(tabuleiro,aux):
 
         no = No()
         no.tabuleiro = copy.deepcopy(m_auxiliar)
+        no.custo_h = h1(no.tabuleiro)
+        no.pai = v
+        no.custo_g = v.custo_g + 1
+        no.custo_f = no.custo_g + no.custo_h
         sucessores.append(no)
     return sucessores
 
@@ -89,15 +92,17 @@ def geraSucessores(tabuleiro,aux):
 def verifica_tabuleiros_iguais(tab_m,conj):
     for k in conj:
         if tab_m == k.tabuleiro:
-            return True,k
+            return True
     return False
 
-
+def busca_elem(tabuleiro,conj):
+    for k in conj:
+        if tabuleiro == k.tabuleiro:
+            return k
 
 #Implementação das Heurísticas:
 
 def h1(tabuleiro):
-    #tabuleiro = no.tabuleiro
     peca_fora_lugar = 0
     peca_atual = 0
     for i in range(len(tabuleiro)):
@@ -109,9 +114,7 @@ def h1(tabuleiro):
                 peca_atual += 1 
     return peca_fora_lugar
 
-
-def h2(no):
-    tabuleiro = no.tabuleiro
+def h2(tabuleiro):
     seq_fora_lugar = 0
     aux = list()
     for i in range(len(tabuleiro)):
@@ -125,12 +128,7 @@ def h2(no):
                 seq_fora_lugar += 1    
     return seq_fora_lugar
 
-
-
-# 5 1 2 3 9 6 7 4 13 10 11 8 0 14 15 12 ----> manhattan = 12
-
-def h3(no):
-    tabuleiro = no.tabuleiro
+def h3(tabuleiro):
     m_aux = [[1,2,3,4], [5,6,7,8], [9,10,11,12], [13,14,15,0]]
     manhattan = 0
     for i in range(len(tabuleiro)):
@@ -141,14 +139,12 @@ def h3(no):
                 manhattan += abs(x1 - x2) + abs(y1 - y2)
     return manhattan
 
+def h4(tabuleiro,p1,p2,p3):
+    p1,p2,p3 = 0.5,0.2,0.3
+    return (p1 * h1(tabuleiro)) + (p2 * h2(tabuleiro)) + (p3 * h3(tabuleiro))
 
-
-def h4(no,p1,p2,p3):
-    return (p1 * h1(no)) + (p2 * h2(no)) + (p3 * h3(no))
-
-
-def h5(no):
-    return max(h1(no),h2(no),h3(no))
+def h5(tabuleiro):
+    return max(h1(tabuleiro),h2(tabuleiro),h3(tabuleiro))
 
 
 
@@ -165,10 +161,12 @@ def a_star(inicial,final):
     while len(conj_a) != 0 and v.tabuleiro != final.tabuleiro:
         conj_f.append(v)
         conj_a.remove(v)
-        sucessores = geraSucessores(v.tabuleiro,pos_sucessoras(v.tabuleiro))
-        verificado,k = verifica_tabuleiros_iguais(m.tabuleiro,conj_a)
+        sucessores = geraSucessores(v,pos_sucessoras(v.tabuleiro))
+        
         for m in sucessores:
+            verificado = verifica_tabuleiros_iguais(m.tabuleiro,conj_a)
             if verificado == True:
+                k = busca_elem(m.tabuleiro,conj_a)
                 if m.custo_g < k.custo_g:
                     conj_a.remove(k)
             if m not in conj_a and m not in conj_f:
@@ -198,7 +196,7 @@ def main():
     inicial.tabuleiro = m_tabuleiro
     final.tabuleiro = [[1,2,3,4], [5,6,7,8], [9,10,11,12], [13,14,15,0]]
 
-    #a_star(inicial,final)
+    a_star(inicial,final)
 
     
     
@@ -211,25 +209,11 @@ if __name__ == '__main__':
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-   '''
-    Teste para ver se os sucessores vieram como nós
+    '''
+    #Teste para ver se os sucessores vieram como nós
     
     
-    suc = geraSucessores(inicial.tabuleiro,pos_sucessoras(inicial.tabuleiro))
+    suc = geraSucessores(inicial,pos_sucessoras(inicial.tabuleiro))
     
     for i in suc:
         print( 'Tipo do elemento: ' + str(type(i)))
@@ -237,4 +221,19 @@ if __name__ == '__main__':
         print('G: ' + str(i.custo_g))
         print('H: ' + str(i.custo_h))
         print('F: ' + str(i.custo_f))
+        print('Tabuleiro pai: ' + str(i.pai.tabuleiro))
     '''
+
+
+
+
+
+
+
+
+
+
+
+
+
+ 
