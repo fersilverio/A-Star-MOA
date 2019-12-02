@@ -13,11 +13,11 @@ class No:
 
 #Funções auxiliares
 
-def arr_s_espaco(entrada):
+def arr_int(entrada):
     arr = list()
     for i in range(len(entrada)):
-        if entrada[i] != ' ':
-            arr.append(entrada[i])
+        if entrada[i] != '':
+            arr.append(int(entrada[i]))
     return arr
 
 
@@ -88,7 +88,7 @@ def geraSucessores(v,aux):
 
         no = No()
         no.tabuleiro = copy.deepcopy(m_auxiliar)
-        no.custo_h = h1(no.tabuleiro)
+        no.custo_h = h5(no.tabuleiro)
         no.pai = v
         no.custo_g = v.custo_g + 1
         no.custo_f = no.custo_g + no.custo_h
@@ -111,25 +111,14 @@ def busca_elem(tabuleiro,conj):
 
 def h1(tabuleiro):
     peca_fora_lugar = 0
-    peca_atual = 0
-    for i in range(len(tabuleiro)):
-        for j in range(len(tabuleiro)):
-            if tabuleiro[i][j] == peca_atual:
-                peca_atual += 1
-            else:
-                peca_fora_lugar += 1
-                peca_atual += 1 
-    return peca_fora_lugar
-
-    '''
-    #Tentativa melhorar o tempo de execução da heuristica
+    peca_atual = 0    
     for i in range(len(tabuleiro)):
         if tabuleiro[i] == peca_atual:
             peca_atual += 1
         else:
             peca_fora_lugar += 1
             peca_atual += 1
-    '''
+    return peca_fora_lugar
 
 def h2(tabuleiro):
     seq_fora_lugar = 0
@@ -156,7 +145,7 @@ def h3(tabuleiro):
                 manhattan += abs(x1 - x2) + abs(y1 - y2)
     return manhattan
 
-def h4(tabuleiro,p1,p2,p3):
+def h4(tabuleiro):
     p1,p2,p3 = 0.5,0.2,0.3
     return (p1 * h1(tabuleiro)) + (p2 * h2(tabuleiro)) + (p3 * h3(tabuleiro))
 
@@ -197,23 +186,30 @@ def a_star(inicial,final):
 
 
 
-
-
-
-
-
 def main():
     inicial = No()
     final = No()
     m_tabuleiro = [[0,0,0,0], [0,0,0,0], [0,0,0,0], [0,0,0,0]]
-    entrada = input()
-    m_tabuleiro = arr_s_espaco(entrada)
-    print('Digitar os valores da matriz do tabuleiro: ')
-    '''
-    for i in range(0,4):
-        for j in range(0,4):
-            m_tabuleiro[i][j] = int(input())
-    '''
+    entrada = input().split(' ')
+    aux = arr_int(entrada) 
+    
+    m_tabuleiro[0][0] = aux[0]
+    m_tabuleiro[0][1] = aux[1]
+    m_tabuleiro[0][2] = aux[2]
+    m_tabuleiro[0][3] = aux[3]
+    m_tabuleiro[1][0] = aux[4]
+    m_tabuleiro[1][1] = aux[5]
+    m_tabuleiro[1][2] = aux[6]
+    m_tabuleiro[1][3] = aux[7]
+    m_tabuleiro[2][0] = aux[8]
+    m_tabuleiro[2][1] = aux[9]
+    m_tabuleiro[2][2] = aux[10]
+    m_tabuleiro[2][3] = aux[11]
+    m_tabuleiro[3][0] = aux[12]
+    m_tabuleiro[3][1] = aux[13]
+    m_tabuleiro[3][2] = aux[14]
+    m_tabuleiro[3][3] = aux[15]
+    
     inicial.tabuleiro = m_tabuleiro
     final.tabuleiro = [[1,2,3,4], [5,6,7,8], [9,10,11,12], [13,14,15,0]]
 
@@ -225,30 +221,6 @@ def main():
 
 if __name__ == '__main__':
     main()
-
-
-
-
-
-    '''
-    #Teste para ver se os sucessores vieram como nós
-    
-    
-    suc = geraSucessores(inicial,pos_sucessoras(inicial.tabuleiro))
-    
-    for i in suc:
-        print( 'Tipo do elemento: ' + str(type(i)))
-        print('Tabuleiro: ' + str(i.tabuleiro))
-        print('G: ' + str(i.custo_g))
-        print('H: ' + str(i.custo_h))
-        print('F: ' + str(i.custo_f))
-        print('Tabuleiro pai: ' + str(i.pai.tabuleiro))
-    '''
-
-
-
-
-
 
 
 
