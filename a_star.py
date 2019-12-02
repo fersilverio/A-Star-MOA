@@ -5,13 +5,21 @@ import copy
 class No:
     def __init__(self):
         self.tabuleiro = []
-        self.custo_g = 0 #custo que é incrementado 1 cada vez que é gerado um nivel na "arvore"
-        self.custo_h = 0 #custo da heurística
-        self.custo_f = 0 # f + g
+        self.custo_g = 0 
+        self.custo_h = 0 
+        self.custo_f = 0 
         self.pai = None
 
 
 #Funções auxiliares
+
+def arr_s_espaco(entrada):
+    arr = list()
+    for i in range(len(entrada)):
+        if entrada[i] != ' ':
+            arr.append(entrada[i])
+    return arr
+
 
 def f_menor_valor(conj):
     menor = conj[0]
@@ -113,6 +121,16 @@ def h1(tabuleiro):
                 peca_atual += 1 
     return peca_fora_lugar
 
+    '''
+    #Tentativa melhorar o tempo de execução da heuristica
+    for i in range(len(tabuleiro)):
+        if tabuleiro[i] == peca_atual:
+            peca_atual += 1
+        else:
+            peca_fora_lugar += 1
+            peca_atual += 1
+    '''
+
 def h2(tabuleiro):
     seq_fora_lugar = 0
     aux = list()
@@ -183,15 +201,19 @@ def a_star(inicial,final):
 
 
 
+
 def main():
     inicial = No()
     final = No()
     m_tabuleiro = [[0,0,0,0], [0,0,0,0], [0,0,0,0], [0,0,0,0]]
-    
+    entrada = input()
+    m_tabuleiro = arr_s_espaco(entrada)
     print('Digitar os valores da matriz do tabuleiro: ')
+    '''
     for i in range(0,4):
         for j in range(0,4):
             m_tabuleiro[i][j] = int(input())
+    '''
     inicial.tabuleiro = m_tabuleiro
     final.tabuleiro = [[1,2,3,4], [5,6,7,8], [9,10,11,12], [13,14,15,0]]
 
