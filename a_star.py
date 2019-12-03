@@ -88,7 +88,7 @@ def geraSucessores(v,aux):
 
         no = No()
         no.tabuleiro = copy.deepcopy(m_auxiliar)
-        no.custo_h = h5(no.tabuleiro)
+        no.custo_h = h3(no.tabuleiro)
         no.pai = v
         no.custo_g = v.custo_g + 1
         no.custo_f = no.custo_g + no.custo_h
