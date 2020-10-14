@@ -13,6 +13,7 @@ class No:
 
 #Funções auxiliares
 
+#Tratamento da entrada de dados
 def arr_int(entrada):
     arr = list()
     for i in range(len(entrada)):
@@ -20,7 +21,7 @@ def arr_int(entrada):
             arr.append(int(entrada[i]))
     return arr
 
-
+#Retorna o menor valor do conjunto F
 def f_menor_valor(conj):
     menor = conj[0]
     for i in range(len(conj)):
@@ -110,14 +111,11 @@ def busca_elem(tabuleiro,conj):
 #Implementação das Heurísticas:
 
 def h1(tabuleiro):
-    peca_fora_lugar = 0
-    peca_atual = 0    
+    est_final = [[1,2,3,4], [12,13,14,5], [11,0,15,6], [10,9,8,7]]
+    peca_fora_lugar = 0    
     for i in range(len(tabuleiro)):
-        if tabuleiro[i] == peca_atual:
-            peca_atual += 1
-        else:
+        if tabuleiro[i] != est_final[i]:
             peca_fora_lugar += 1
-            peca_atual += 1
     return peca_fora_lugar
 
 def h2(tabuleiro):
@@ -151,9 +149,6 @@ def h4(tabuleiro):
 
 def h5(tabuleiro):
     return max(h1(tabuleiro),h2(tabuleiro),h3(tabuleiro))
-
-
-
 
 
 
@@ -211,7 +206,7 @@ def main():
     m_tabuleiro[3][3] = aux[15]
     
     inicial.tabuleiro = m_tabuleiro
-    final.tabuleiro = [[1,2,3,4], [5,6,7,8], [9,10,11,12], [13,14,15,0]]
+    final.tabuleiro = [[1,2,3,4], [12,13,14,5], [11,0,15,6], [10,9,8,7]]
 
     a_star(inicial,final)
 
