@@ -21,6 +21,29 @@ def arr_int(entrada):
             arr.append(int(entrada[i]))
     return arr
 
+#Gerar os proximos para serem comparados na Heuristica 2
+def gerar_vet_proximos(tabuleiro,est_final):
+    prox_do_tab = list()
+    prox_do_est_final = list()
+    for i in range(len(tabuleiro)):
+        for j in range(len(tabuleiro)):
+            if i == 3 and j == 3:
+                continue
+            elif i < 3 and j == 3:
+                prox_do_tab.append(tabuleiro[i + 1][0])
+            else:
+                prox_do_tab.append(tabuleiro[i][j + 1])
+    for i in range(len(est_final)):
+        for j in range(len(est_final)):
+            if i == 3 and j == 3:
+                continue
+            elif i < 3 and j == 3:
+                prox_do_est_final.append(est_final[i + 1][0])
+            else:
+                prox_do_est_final.append(est_final[i][j + 1])
+    return prox_do_tab, prox_do_est_final
+
+
 #Retorna o menor valor do conjunto F
 def f_menor_valor(conj):
     menor = conj[0]
@@ -29,6 +52,7 @@ def f_menor_valor(conj):
             menor = conj[i]
     return menor
 
+#Retornas as posições que o elemento do estado final está no tabuleiro
 def pos(elem,aux):
     for i in range(len(aux)):
         for j in range(len(aux)):
@@ -103,6 +127,7 @@ def verifica_tabuleiros_iguais(tab_m,conj):
             return True
     return False
 
+#Busca dentro do conjunto um nó cujo tabuleiro bate
 def busca_elem(tabuleiro,conj):
     for k in conj:
         if tabuleiro == k.tabuleiro:
@@ -114,32 +139,30 @@ def h1(tabuleiro):
     est_final = [[1,2,3,4], [12,13,14,5], [11,0,15,6], [10,9,8,7]]
     peca_fora_lugar = 0    
     for i in range(len(tabuleiro)):
-        if tabuleiro[i] != est_final[i]:
-            peca_fora_lugar += 1
+        for j in range(len(tabuleiro)):
+            if tabuleiro[i][j] != est_final[i][j]:
+                peca_fora_lugar += 1
     return peca_fora_lugar
 
 def h2(tabuleiro):
+    est_final = [[1,2,3,4], [12,13,14,5], [11,0,15,6], [10,9,8,7]]
     seq_fora_lugar = 0
-    aux = list()
-    for i in range(len(tabuleiro)):
-        for j in range(len(tabuleiro)):
-            aux.append(tabuleiro[i][j])
-    for i in range(0,(len(aux) - 1)):
-        if aux[i + 1] != aux[i] + 1:
-            if aux[i] == 0:
-                continue
-            else:
-                seq_fora_lugar += 1    
+    
+    prox_do_tab,prox_do_est_final = gerar_vet_proximos(tabuleiro,est_final)
+    
+    for i in range(len(prox_do_tab)):
+        if prox_do_tab[i] != prox_do_est_final[i]:
+                seq_fora_lugar += 1
     return seq_fora_lugar
 
 def h3(tabuleiro):
-    m_aux = [[1,2,3,4], [5,6,7,8], [9,10,11,12], [13,14,15,0]]
+    est_final = [[1,2,3,4], [12,13,14,5], [11,0,15,6], [10,9,8,7]]
     manhattan = 0
     for i in range(len(tabuleiro)):
         for j in range(len(tabuleiro)):
-            if tabuleiro[i][j] != m_aux[i][j]:
+            if tabuleiro[i][j] != est_final[i][j]:
                 x1,y1 = i,j
-                x2,y2 = pos(m_aux[i][j],tabuleiro)
+                x2,y2 = pos(est_final[i][j],tabuleiro)
                 manhattan += abs(x1 - x2) + abs(y1 - y2)
     return manhattan
 
@@ -182,9 +205,11 @@ def a_star(inicial,final):
 
 
 def main():
+    
     inicial = No()
     final = No()
     m_tabuleiro = [[0,0,0,0], [0,0,0,0], [0,0,0,0], [0,0,0,0]]
+    
     entrada = input().split(' ')
     aux = arr_int(entrada) 
     
@@ -205,15 +230,14 @@ def main():
     m_tabuleiro[3][2] = aux[14]
     m_tabuleiro[3][3] = aux[15]
     
+    #m_tabuleiro = [[12, 1, 3, 0], [11, 2, 15, 14], [10, 13, 8, 4], [9, 7, 6, 5]]
+
     inicial.tabuleiro = m_tabuleiro
     final.tabuleiro = [[1,2,3,4], [12,13,14,5], [11,0,15,6], [10,9,8,7]]
 
     a_star(inicial,final)
-
     
     
- 
-
 if __name__ == '__main__':
     main()
 
