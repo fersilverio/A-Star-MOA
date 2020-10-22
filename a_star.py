@@ -1,7 +1,6 @@
 import copy
 
 
-#Representação do Nó(vértice)
 class No:
     def __init__(self):
         self.tabuleiro = []
@@ -11,9 +10,7 @@ class No:
         self.pai = None
 
 
-#Funções auxiliares
 
-#Tratamento da entrada de dados
 def arr_int(entrada):
     arr = list()
     for i in range(len(entrada)):
@@ -21,7 +18,6 @@ def arr_int(entrada):
             arr.append(int(entrada[i]))
     return arr
 
-#Gerar os proximos para serem comparados na Heuristica 2
 def gerar_vet_proximos(tabuleiro,est_final):
     prox_do_tab = list()
     prox_do_est_final = list()
@@ -44,7 +40,6 @@ def gerar_vet_proximos(tabuleiro,est_final):
     return prox_do_tab, prox_do_est_final
 
 
-#Retorna o menor valor do conjunto F
 def f_menor_valor(conj):
     menor = conj[0]
     for i in range(len(conj)):
@@ -52,7 +47,6 @@ def f_menor_valor(conj):
             menor = conj[i]
     return menor
 
-#Retornas as posições que o elemento do estado final está no tabuleiro
 def pos(elem,aux):
     for i in range(len(aux)):
         for j in range(len(aux)):
@@ -103,7 +97,6 @@ def pos_sucessoras(tabuleiro):
 def geraSucessores(v,aux):
     tabuleiro = v.tabuleiro
     i,j = pos(0,tabuleiro)
-    sucessores = list()
     for k in range(len(aux)):
         a,b = pos(aux[k],tabuleiro)
         m_auxiliar = copy.deepcopy(tabuleiro)
@@ -113,12 +106,11 @@ def geraSucessores(v,aux):
 
         no = No()
         no.tabuleiro = copy.deepcopy(m_auxiliar)
-        no.custo_h = h3(no.tabuleiro)
+        no.custo_h = h1(no.tabuleiro)
         no.pai = v
         no.custo_g = v.custo_g + 1
         no.custo_f = no.custo_g + no.custo_h
-        sucessores.append(no)
-    return sucessores
+        yield no
 
 
 def verifica_tabuleiros_iguais(tab_m,conj):
@@ -127,13 +119,11 @@ def verifica_tabuleiros_iguais(tab_m,conj):
             return True
     return False
 
-#Busca dentro do conjunto um nó cujo tabuleiro bate
 def busca_elem(tabuleiro,conj):
     for k in conj:
         if tabuleiro == k.tabuleiro:
             return k
 
-#Implementação das Heurísticas:
 
 def h1(tabuleiro):
     est_final = [[1,2,3,4], [12,13,14,5], [11,0,15,6], [10,9,8,7]]
@@ -175,19 +165,15 @@ def h5(tabuleiro):
 
 
 
-#Implementação do A*
 def a_star(inicial,final):
     conj_a = list()
-    conj_f = list()
+    conj_f = set()
     conj_a.append(inicial)
     v = f_menor_valor(conj_a)
-    sucessores = list()
     while len(conj_a) != 0 and v.tabuleiro != final.tabuleiro:
-        conj_f.append(v)
+        conj_f.add(v)
         conj_a.remove(v)
-        sucessores = geraSucessores(v,pos_sucessoras(v.tabuleiro))
-        
-        for m in sucessores:
+        for m in geraSucessores(v,pos_sucessoras(v.tabuleiro)):
             verificado = verifica_tabuleiros_iguais(m.tabuleiro,conj_a)
             if verificado == True:
                 k = busca_elem(m.tabuleiro,conj_a)
@@ -212,7 +198,7 @@ def main():
     
     entrada = input().split(' ')
     aux = arr_int(entrada) 
-    
+ 
     m_tabuleiro[0][0] = aux[0]
     m_tabuleiro[0][1] = aux[1]
     m_tabuleiro[0][2] = aux[2]
@@ -230,13 +216,11 @@ def main():
     m_tabuleiro[3][2] = aux[14]
     m_tabuleiro[3][3] = aux[15]
     
-    #m_tabuleiro = [[12, 1, 3, 0], [11, 2, 15, 14], [10, 13, 8, 4], [9, 7, 6, 5]]
 
     inicial.tabuleiro = m_tabuleiro
     final.tabuleiro = [[1,2,3,4], [12,13,14,5], [11,0,15,6], [10,9,8,7]]
-
-    a_star(inicial,final)
     
+    a_star(inicial,final)   
     
 if __name__ == '__main__':
     main()
