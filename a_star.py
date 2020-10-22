@@ -1,5 +1,5 @@
 import copy
-import heapq as hp
+
 
 class No:
     def __init__(self):
@@ -8,8 +8,8 @@ class No:
         self.custo_h = 0 
         self.custo_f = 0 
         self.pai = None
-
-
+    
+   
 
 def arr_int(entrada):
     arr = list()
@@ -106,7 +106,7 @@ def geraSucessores(v,aux):
 
         no = No()
         no.tabuleiro = copy.deepcopy(m_auxiliar)
-        no.custo_h = h1(no.tabuleiro)
+        no.custo_h = h3(no.tabuleiro)
         no.pai = v
         no.custo_g = v.custo_g + 1
         no.custo_f = no.custo_g + no.custo_h
@@ -173,6 +173,8 @@ def a_star(inicial,final):
     conj_a.append(inicial)
     conj_a_aux.add(inicial)
     v = f_menor_valor(conj_a)
+    
+    
     while len(conj_a) != 0 and v.tabuleiro != final.tabuleiro:
         conj_f.add(v)
         conj_a.remove(v)
@@ -182,8 +184,6 @@ def a_star(inicial,final):
                verificado = True
             
             if verificado == True:
-                #k = busca_elem(m.tabuleiro,conj_a)
-                #if m.custo_g < k.custo_g:
                 conj_a.remove(k)
                 conj_a_aux.remove(k)
             if m not in conj_a_aux and m not in conj_f:
