@@ -182,10 +182,10 @@ def a_star(inicial,final):
                verificado = True
             
             if verificado == True:
-                k = busca_elem(m.tabuleiro,conj_a)
-                if m.custo_g < k.custo_g:
-                    conj_a.remove(k)
-                    conj_a_aux.remove(k)
+                #k = busca_elem(m.tabuleiro,conj_a)
+                #if m.custo_g < k.custo_g:
+                conj_a.remove(k)
+                conj_a_aux.remove(k)
             if m not in conj_a_aux and m not in conj_f:
                 conj_a.append(m)
                 conj_a_aux.add(m)
