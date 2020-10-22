@@ -1,7 +1,5 @@
-
-
 import copy
-
+import heapq as hp
 
 class No:
     def __init__(self):
@@ -188,7 +186,7 @@ def a_star(inicial,final):
                 if m.custo_g < k.custo_g:
                     conj_a.remove(k)
                     conj_a_aux.remove(k)
-            if m not in conj_a and m not in conj_f:
+            if m not in conj_a_aux and m not in conj_f:
                 conj_a.append(m)
                 conj_a_aux.add(m)
         v = f_menor_valor(conj_a)
