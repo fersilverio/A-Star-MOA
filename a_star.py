@@ -1,3 +1,5 @@
+
+
 import copy
 
 
@@ -167,20 +169,28 @@ def h5(tabuleiro):
 
 def a_star(inicial,final):
     conj_a = list()
+    conj_a_aux = set()
     conj_f = set()
+    verificado = False
     conj_a.append(inicial)
+    conj_a_aux.add(inicial)
     v = f_menor_valor(conj_a)
     while len(conj_a) != 0 and v.tabuleiro != final.tabuleiro:
         conj_f.add(v)
         conj_a.remove(v)
+        conj_a_aux.remove(v)
         for m in geraSucessores(v,pos_sucessoras(v.tabuleiro)):
-            verificado = verifica_tabuleiros_iguais(m.tabuleiro,conj_a)
+            if m in conj_a_aux:
+               verificado = True
+            
             if verificado == True:
                 k = busca_elem(m.tabuleiro,conj_a)
                 if m.custo_g < k.custo_g:
                     conj_a.remove(k)
+                    conj_a_aux.remove(k)
             if m not in conj_a and m not in conj_f:
                 conj_a.append(m)
+                conj_a_aux.add(m)
         v = f_menor_valor(conj_a)
     if v.tabuleiro == final.tabuleiro:
         print(v.custo_g)
@@ -228,6 +238,11 @@ if __name__ == '__main__':
 
 
 
+
+
+
+
+ 
 
 
 
