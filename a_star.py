@@ -1,8 +1,9 @@
 import copy
 import heapq
 
-
+#Definição da classe Nó
 class No:
+    
     def __init__(self):
         self.tabuleiro = []
         self.custo_g = 0 
@@ -20,7 +21,7 @@ class No:
         return hash(str(self.tabuleiro))
     
    
-
+#Tratamento da entrada
 def arr_int(entrada):
     arr = list()
     for i in range(len(entrada)):
@@ -28,6 +29,9 @@ def arr_int(entrada):
             arr.append(int(entrada[i]))
     return arr
 
+#######        Funções auxiliares         ########
+
+#Auxilia a heurística 2, visando gerar um array de próximos
 def gerar_vet_proximos(arr_atual):
     prox = list()
     for i in range(len(arr_atual)):
@@ -40,13 +44,14 @@ def gerar_vet_proximos(arr_atual):
                 prox.append(arr_atual[i][j + 1])
     return prox
 
-
+#Localiza as posições de um valor em uma matriz(tabuleiro)
 def pos(elem,aux):
     for i in range(len(aux)):
         for j in range(len(aux)):
             if elem == aux[i][j]:
                 return i,j
 
+#Retorna um array contendo as posições sucessoras de um tabuleiro
 def pos_sucessoras(tabuleiro):
     i,j = pos(0,tabuleiro)
     aux = list()
@@ -88,6 +93,7 @@ def pos_sucessoras(tabuleiro):
             aux.append(tabuleiro[i][j - 1])
     return aux
 
+#Recebe as posições sucessoras, as transformam em nós e calculam o custo com uma heurística
 def geraSucessores(v,aux):
     tabuleiro = v.tabuleiro
     i,j = pos(0,tabuleiro)
@@ -106,6 +112,8 @@ def geraSucessores(v,aux):
         no.custo_f = no.custo_g + no.custo_h
         yield no
 
+
+########                    Implementação das heurísticas           #############
 
 def h1(tabuleiro):
     est_final = [[1,2,3,4], [12,13,14,5], [11,0,15,6], [10,9,8,7]]
@@ -145,6 +153,7 @@ def h5(tabuleiro):
     return max(h1(tabuleiro),h2(tabuleiro),h3(tabuleiro))
 
 
+#Implementação do algoritmo A*
 
 def a_star(inicial,final):
     conj_a = []
