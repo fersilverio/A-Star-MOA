@@ -1,4 +1,5 @@
 import copy
+import heapq
 
 
 class No:
@@ -8,6 +9,15 @@ class No:
         self.custo_h = 0 
         self.custo_f = 0 
         self.pai = None
+    
+    def __eq__(self, other):
+        return self.tabuleiro == other.tabuleiro 
+    
+    def __lt__(self, other):
+        return self.custo_f < other.custo_f
+    
+    def __hash__(self):
+        return hash(str(self.tabuleiro))
     
    
 
@@ -39,13 +49,6 @@ def gerar_vet_proximos(tabuleiro,est_final):
                 prox_do_est_final.append(est_final[i][j + 1])
     return prox_do_tab, prox_do_est_final
 
-
-def f_menor_valor(conj):
-    menor = conj[0]
-    for i in range(len(conj)):
-        if conj[i].custo_f <= menor.custo_f:
-            menor = conj[i]
-    return menor
 
 def pos(elem,aux):
     for i in range(len(aux)):
@@ -113,18 +116,6 @@ def geraSucessores(v,aux):
         yield no
 
 
-def verifica_tabuleiros_iguais(tab_m,conj):
-    for k in conj:
-        if tab_m == k.tabuleiro:
-            return True
-    return False
-
-def busca_elem(tabuleiro,conj):
-    for k in conj:
-        if tabuleiro == k.tabuleiro:
-            return k
-
-
 def h1(tabuleiro):
     est_final = [[1,2,3,4], [12,13,14,5], [11,0,15,6], [10,9,8,7]]
     peca_fora_lugar = 0    
@@ -166,34 +157,18 @@ def h5(tabuleiro):
 
 
 def a_star(inicial,final):
-    conj_a = list()
-    conj_a_aux = set()
+    conj_a = []
     conj_f = set()
-    verificado = False
-    conj_a.append(inicial)
-    conj_a_aux.add(inicial)
-    v = f_menor_valor(conj_a)
-    
-    
-    while len(conj_a) != 0 and v.tabuleiro != final.tabuleiro:
+    heapq.heappush(conj_a,inicial)
+    v = heapq.heappop(conj_a)
+    while v.tabuleiro != final.tabuleiro:
         conj_f.add(v)
-        conj_a.remove(v)
-        conj_a_aux.remove(v)
         for m in geraSucessores(v,pos_sucessoras(v.tabuleiro)):
-            if m in conj_a_aux:
-               verificado = True
-            
-            if verificado == True:
-                conj_a.remove(k)
-                conj_a_aux.remove(k)
-            if m not in conj_a_aux and m not in conj_f:
-                conj_a.append(m)
-                conj_a_aux.add(m)
-        v = f_menor_valor(conj_a)
-    if v.tabuleiro == final.tabuleiro:
-        print(v.custo_g)
-    else:
-        print('Wrong')
+            if m not in conj_f:
+                heapq.heappush(conj_a,m)
+        v = heapq.heappop(conj_a)
+    print(v.custo_g)
+
 
 
 
