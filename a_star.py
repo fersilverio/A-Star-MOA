@@ -28,26 +28,17 @@ def arr_int(entrada):
             arr.append(int(entrada[i]))
     return arr
 
-def gerar_vet_proximos(tabuleiro,est_final):
-    prox_do_tab = list()
-    prox_do_est_final = list()
-    for i in range(len(tabuleiro)):
-        for j in range(len(tabuleiro)):
+def gerar_vet_proximos(arr_atual):
+    prox = list()
+    for i in range(len(arr_atual)):
+        for j in range(len(arr_atual)):
             if i == 3 and j == 3:
                 continue
             elif i < 3 and j == 3:
-                prox_do_tab.append(tabuleiro[i + 1][0])
+                prox.append(arr_atual[i + 1][0])
             else:
-                prox_do_tab.append(tabuleiro[i][j + 1])
-    for i in range(len(est_final)):
-        for j in range(len(est_final)):
-            if i == 3 and j == 3:
-                continue
-            elif i < 3 and j == 3:
-                prox_do_est_final.append(est_final[i + 1][0])
-            else:
-                prox_do_est_final.append(est_final[i][j + 1])
-    return prox_do_tab, prox_do_est_final
+                prox.append(arr_atual[i][j + 1])
+    return prox
 
 
 def pos(elem,aux):
@@ -128,9 +119,8 @@ def h1(tabuleiro):
 def h2(tabuleiro):
     est_final = [[1,2,3,4], [12,13,14,5], [11,0,15,6], [10,9,8,7]]
     seq_fora_lugar = 0
-    
-    prox_do_tab,prox_do_est_final = gerar_vet_proximos(tabuleiro,est_final)
-    
+    prox_do_tab = gerar_vet_proximos(tabuleiro)
+    prox_do_est_final = gerar_vet_proximos(est_final)
     for i in range(len(prox_do_tab)):
         if prox_do_tab[i] != prox_do_est_final[i]:
                 seq_fora_lugar += 1
